@@ -1,5 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://businesscopilot.abacusai.app';
-
+const API_BASE = 'https://3fd7d68ba.preview.abacusai.app'; // HARDCODED for testing
 interface RequestOptions extends RequestInit {
   skipAuth?: boolean;
 }
