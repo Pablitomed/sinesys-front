@@ -1,4 +1,5 @@
 const API_BASE = 'https://3fd7d68ba.preview.abacusai.app'; // HARDCODED for testing
+
 interface RequestOptions extends RequestInit {
   skipAuth?: boolean;
 }
