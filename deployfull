@@ -1,5 +1,0 @@
-cd /home/ubuntu/orion_mvp_backend/nextjs_space
-
-git remote add origin https://https://github.com/Pablitomed/sinesys-front/new/main
-git branch -M main
-git push -u origin main
