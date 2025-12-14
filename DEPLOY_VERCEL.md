@@ -1,5 +1,5 @@
 # 🚀 DEPLOY DO FRONTEND SYNESIS NO VERCEL
-
+ 
 ## Pré-requisitos
 - Conta no GitHub (para conectar o repositório)
 - Conta no Vercel (gratuita): https://vercel.com
