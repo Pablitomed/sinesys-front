@@ -149,4 +149,4 @@ Após deploy bem-sucedido:
 4. ✅ Atualizar URLs no backend (ver ETAPA 3)
 5. ✅ Configurar Stripe em modo produção
 6. 🎉 Lançar!
-
+ 
