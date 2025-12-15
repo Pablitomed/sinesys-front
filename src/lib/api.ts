@@ -1,4 +1,4 @@
-const API_BASE = 'https://3fd7d68ba.preview.abacusai.app'; // HARDCODED for testing
+const API_BASE = 'https://dad9790da.preview.abacusai.app'; // NEW WORKING PREVIEW URL
 
 interface RequestOptions extends RequestInit {
   skipAuth?: boolean;
