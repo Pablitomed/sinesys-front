@@ -145,7 +145,7 @@ export class SynesisAPI {
     a.href = url;
     a.download = filename;
     a.click();
-    URL.revokeObjectURL(url);Running:cat /home/ubuntu/orion_mvp_backend/nextjs_space/src/lib/api.ts
+    URL.revokeObjectURL(url);
   }
 }
 
