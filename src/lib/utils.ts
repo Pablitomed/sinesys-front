@@ -30,5 +30,5 @@ export function getSectorIcon(sector: string): string {
     alimentos: '🍽️', serviços: '🔧', servicos: '🔧',
     educação: '📚', educacao: '📚'
   };
-  return icons[sector.toLowerCase()] || '📊';Running:cat /home/ubuntu/orion_mvp_backend/nextjs_space/src/lib/api.ts
+  return icons[sector.toLowerCase()] || '📊';
 }
