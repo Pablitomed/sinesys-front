@@ -1,4 +1,4 @@
-const API_BASE = 'https://dad9790da.preview.abacusai.app'; // NEW WORKING PREVIEW URL
+const API_BASE = 'https://d1807f051.preview.abacusai.app'; // NOVO PREVIEW URL - 16/12/2025
 
 interface RequestOptions extends RequestInit {
   skipAuth?: boolean;
