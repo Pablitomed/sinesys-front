@@ -28,7 +28,7 @@ export default function AuthPage() {
         await api.register(form.email, form.password, form.name);
         toast.success('Conta criada com sucesso!');
       }
-      router.push('/dashboard');
+     window.location.href = '/dashboard';;
     } catch (error: any) {
      // Linha 33 - ANTES:
 router.push('/dashboard');
