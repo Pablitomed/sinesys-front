@@ -1,1 +1,3 @@
-Running:cat /home/ubuntu/orion_mvp_backend/nextjs_space/src/app/dashboard/page.tsx
+// MODO TESTE: Vai direto para análise sem pagamento
+console.log('🧪 Modo teste ativado - indo direto para análise');
+router.push(`/analysis?tier=${tier}&test=true`);
