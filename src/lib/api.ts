@@ -87,7 +87,12 @@ export class SynesisAPI {
   isAuthenticated(): boolean {
     return !!this.token;
   }
-
+async createAnalysis(tier: 'CONSULTANT' | 'PARTNER') {
+    return this.request<{ id: string; status: string }>('/api/analysis', {
+      method: 'POST',
+      body: JSON.stringify({ tier }),
+    });
+}
   async createCheckout(tier: 'CONSULTANT' | 'PARTNER') {
     return this.request<{ sessionId: string; url: string }>('/payments/create-checkout', {
       method: 'POST',
