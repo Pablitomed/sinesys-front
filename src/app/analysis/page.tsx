@@ -18,6 +18,25 @@ function AnalysisContent() {
 
   useEffect(() => {
     const getAnalysisId = async () => {
+      // Modo teste: criar análise diretamente sem session_id
+      const isTestMode = searchParams.get('test') === 'true';
+      const tier = searchParams.get('tier') as 'CONSULTANT' | 'PARTNER' | null;
+      
+      if (isTestMode && tier) {
+        console.log('🧪 Modo teste ativado - criando análise direta');
+        try {
+          const analysisData = await api.createAnalysis(tier);
+          setAnalysisId(analysisData.id);
+          startPolling(analysisData.id);
+          return;
+        } catch (error: any) {
+          toast.error(error.message || 'Erro ao criar análise');
+          router.push('/dashboard');
+          return;
+        }
+      }
+
+      // Modo normal: buscar analysis_id pelo session_id
       const sessionId = searchParams.get('session_id');
       if (!sessionId) {
         toast.error('Sessão não encontrada');
@@ -42,25 +61,6 @@ function AnalysisContent() {
 
     getAnalysisId();
   }, [searchParams, router]);
-
-  const startPolling = async (id: string) => {
-    try {
-      await api.pollAnalysis(id, (statusUpdate) => {
-        setStatus(statusUpdate);
-      });
-      router.push(`/results?id=${id}`);
-    } catch (error: any) {
-      toast.error(error.message || 'Erro na análise');
-      router.push('/dashboard');
-    }
-  };
-
-  if (!status) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[#1e3a8a]" />
-      </div>
-    );
   }
 
   return (
