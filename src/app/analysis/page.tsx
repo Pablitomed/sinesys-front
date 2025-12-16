@@ -1,6 +1,6 @@
-    'use client';
+ 'use client';
 
-import { useEffect, useState, Suspense, useCallback } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -16,39 +16,34 @@ function AnalysisContent() {
   const [status, setStatus] = useState<any>(null);
   const [analysisId, setAnalysisId] = useState<string | null>(null);
 
-  const startPolling = useCallback(async (id: string) => {
-    try {
-      await api.pollAnalysis(id, (statusUpdate) => {
-        setStatus(statusUpdate);
-      });
-      router.push(`/results?id=${id}`);
-    } catch (error: any) {
-      toast.error(error.message || 'Erro na análise');
-      router.push('/dashboard');
-    }
-  }, [router]);
-
   useEffect(() => {
-    const getAnalysisId = async () => {
-      // Modo teste: criar análise diretamente sem session_id
+    let mounted = true;
+
+    async function init() {
       const isTestMode = searchParams.get('test') === 'true';
       const tier = searchParams.get('tier') as 'CONSULTANT' | 'PARTNER' | null;
       
       if (isTestMode && tier) {
-        console.log('🧪 Modo teste ativado - criando análise direta');
+        console.log('🧪 Modo teste ativado');
         try {
           const analysisData = await api.createAnalysis(tier);
+          if (!mounted) return;
           setAnalysisId(analysisData.id);
-          startPolling(analysisData.id);
-          return;
+          
+          await api.pollAnalysis(analysisData.id, (statusUpdate) => {
+            if (mounted) setStatus(statusUpdate);
+          });
+          
+          if (mounted) router.push(`/results?id=${analysisData.id}`);
         } catch (error: any) {
-          toast.error(error.message || 'Erro ao criar análise');
-          router.push('/dashboard');
-          return;
+          if (mounted) {
+            toast.error(error.message || 'Erro ao criar análise');
+            router.push('/dashboard');
+          }
         }
+        return;
       }
 
-      // Modo normal: buscar analysis_id pelo session_id
       const sessionId = searchParams.get('session_id');
       if (!sessionId) {
         toast.error('Sessão não encontrada');
@@ -63,16 +58,49 @@ function AnalysisContent() {
           router.push('/dashboard');
           return;
         }
+        
+        if (!mounted) return;
         setAnalysisId(id);
-        startPolling(id);
+        
+        await api.pollAnalysis(id, (statusUpdate) => {
+          if (mounted) setStatus(statusUpdate);
+        });
+        
+        if (mounted) router.push(`/results?id=${id}`);
       } catch (error: any) {
-        toast.error(error.message || 'Erro ao buscar análise');
-        router.push('/dashboard');
+        if (mounted) {
+          toast.error(error.message || 'Erro ao buscar análise');
+          router.push('/dashboard');
+        }
       }
-    };
+    }
 
-    getAnalysisId();
-  }, [searchParams, router, startPolling]);            <div className="text-4xl font-bold text-[#1e3a8a]">{status.progress || 0}%</div>
+    init();
+
+    return () => {
+      mounted = false;
+    };
+  }, [searchParams, router]);
+
+  if (!status) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#1e3a8a]" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-center text-3xl">Análise em Progresso</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-8">
+            <div className="text-center space-y-4">
+              <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-[#1e3a8a]/10 relative">
+                <div className="text-4xl font-bold text-[#1e3a8a]">{status.progress || 0}%</div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg className="w-full h-full -rotate-90">
                     <circle cx="64" cy="64" r="60" stroke="#e5e7eb" strokeWidth="8" fill="none" />
