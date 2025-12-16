@@ -30,7 +30,11 @@ export default function AuthPage() {
       }
       router.push('/dashboard');
     } catch (error: any) {
-      toast.error(error.message || 'Erro ao autenticar');
+     // Linha 33 - ANTES:
+router.push('/dashboard');
+
+// Linha 33 - DEPOIS:
+window.location.href = '/dashboard';
     } finally {
       setLoading(false);
     }
